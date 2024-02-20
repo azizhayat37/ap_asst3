@@ -10,8 +10,8 @@ def populate_database():
         csv_reader = csv.reader(file)
         # Skip the header line
         next(csv_reader)
-        # Iterate through the lines of the file and use the to create a new IndexData object
-        for line in file:
+        # Iterate through the lines of the file and use them to create new IndexData objects
+        for line in csv_reader:
             # Process each line and add it to the database
             index_data = IndexData(
                 date=str(line[0]), 
