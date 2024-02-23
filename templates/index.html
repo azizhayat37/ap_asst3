@@ -5,18 +5,20 @@
         <div id="chart">
         {{ chart | safe}}
         </div>
-    <h2>Select the start date & end date:</h2>
+    <h2>Please select the start & end dates:</h2>
 
     <form action="" method="post" novalidate>
         {{ form.hidden_tag() }}
         <div class="form-group">
-            <label for="start_date">Start Date</label>
+            <label for="start_date">Start Date:</label>
             {{ form.start_date(class="form-control") }}
         </div>
+        <br>
         <div class="form-group">
-            <label for="end_date">End Date</label>
+            <label for="end_date">End Date:</label>
             {{ form.end_date(class="form-control") }}
         </div>
+        <br>
         <div class="form-group">
             {{ form.submit(class="btn btn-primary") }}
         </div>

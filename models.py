@@ -3,7 +3,8 @@
 from app import db
 
 class IndexData(db.Model):
-    date = db.Column(db.String(10), primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
+    date = db.Column(db.String(10))
     ticker = db.Column(db.String(10))
     open = db.Column(db.Float)
     high = db.Column(db.Float)
