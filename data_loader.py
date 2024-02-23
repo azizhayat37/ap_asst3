@@ -4,6 +4,7 @@ from models import IndexData
 import csv
 import plotly.graph_objects as go
 import pandas as pd
+from datetime import datetime
 
 def populate_database():
     # the source of the data is Kaggle:
@@ -14,11 +15,14 @@ def populate_database():
         csv_reader = csv.reader(file)
         # Skip the header line
         next(csv_reader)
-        # Iterate through the lines of the file and use them to create new IndexData objects
+
         for line in csv_reader:
+            # Convert date from MM/DD/YYYY to YYYY-MM-DD format
+            formatted_date = datetime.strptime(line[0], '%m/%d/%Y').strftime('%Y-%m-%d')
+
             # Process each line and add it to the database
             index_data = IndexData(
-                date=str(line[0]), 
+                date=formatted_date, 
                 ticker=str(line[1]), 
                 open=float(line[2]), 
                 high=float(line[3]), 
@@ -38,9 +42,6 @@ def create_chart(start_date, end_date):
     df = pd.read_sql(IndexData.query.filter(IndexData.date.between(start_date, end_date)).statement, db.engine,
         index_col='date'
     )
-    
-    # convert the date column to a datetime object
-    df['Date'] = pd.to_datetime(df['Date'], format='%m/%d/%Y')
 
     # create a line chart of the stock data
     fig = go.Figure()
@@ -55,8 +56,8 @@ def create_chart(start_date, end_date):
 
     # Set figure title and size
     fig.update_layout(
-        title='SP500 Index Price Over Time',
-        width=800,  # Set the width
+        title='',
+        width=1200,  # Set the width
         height=600   # Set the height
     )
 
