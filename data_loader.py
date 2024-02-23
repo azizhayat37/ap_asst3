@@ -1,16 +1,36 @@
 from data import *
 from app import db
-from models import IndexData
+from models import IndexData, VIXData, Portfolio, Assets
 import csv
 import plotly.graph_objects as go
 import pandas as pd
 from datetime import datetime
 
-def populate_database():
-    # the source of the data is Kaggle:
-    # https://www.kaggle.com/datasets/rupindersinghrana/us-stock-price-index-over-17912015
+def check_databases_exist():
+    #check that the databases to be populated from CSV exist, otherwise create them
+    databases = {'SP500': IndexData, 'VIX': VIXData}
 
-    with open('data/SP_PRICE_INDEX_US.csv', 'r') as file:
+    for ID, database in databases.items():
+        try:
+            test_query = database.query.first()
+            if test_query is None:
+                populate_database(ID)
+        except Exception as e:
+            print(f"Error in check_databases_exist()... {ID} DATABASE AFFECTED")
+            print(e)
+
+
+def populate_database(ID):
+    # the source of the data:
+    # SP500: https://www.kaggle.com/datasets/rupindersinghrana/us-stock-price-index-over-17912015
+    # VIX: https://www.cboe.com/tradable_products/vix/vix_historical_data/
+
+    if ID == 'SP500':
+        file_name = 'data/SP_PRICE_INDEX_US.csv'
+    elif ID == 'VIX':
+        file_name = 'data/VIX_DATA.csv'
+
+    with open(file_name, 'r') as file:
         # Read the contents of the file
         csv_reader = csv.reader(file)
         # Skip the header line
@@ -65,3 +85,5 @@ def create_chart(start_date, end_date):
     fig.update_layout(title='SP500 Index Price Over Time')
 
     return fig.to_html(full_html=False)
+
+

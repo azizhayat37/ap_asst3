@@ -1,6 +1,6 @@
 from app import app, db
 from flask import request, render_template, flash, redirect, url_for
-from data_loader import populate_database, create_chart
+from data_loader import populate_database, create_chart, check_databases_exist
 from forms import ChartDateForm
 from models import IndexData
 from datetime import datetime
@@ -11,14 +11,7 @@ def index():
     form = ChartDateForm()
 
     #create the database if it doesn't exist
-    try:
-        test_query = IndexData.query.first()
-        if test_query is None:
-            populate_database()
-        else:
-            print("Database exists")
-    except Exception as e:
-        print(e)
+    check_databases_exist()
 
     # dates in the dropdown menus come from the database, 1st of month only
     date_options = IndexData.query.with_entities(IndexData.date).filter(extract('day', IndexData.date) == 1).all() # get the first of every month
@@ -36,7 +29,7 @@ def index():
     
     # create the chart that renders as soon as you hit the page
     chart = create_chart(start_date, end_date)
-    
+
     return render_template('index.html', chart=chart, form=form, date_options=date_options)
 
 @app.route('/test', methods=['GET', 'POST'])
