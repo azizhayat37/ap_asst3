@@ -1,8 +1,8 @@
 from app import app, db
 from flask import request, render_template, flash, redirect, url_for
 from data_loader import populate_database, create_chart, check_databases_exist
-from forms import ChartDateForm
-from models import IndexData
+from forms import ChartDateForm, PortfolioUpdateForm
+from models import IndexData, Assets
 from datetime import datetime
 from sqlalchemy import extract
 
@@ -28,9 +28,25 @@ def index():
         end_date = form.end_date.data
     
     # create the chart that renders as soon as you hit the page
-    chart = create_chart(start_date, end_date)
+    chart = create_chart(start_date, end_date, 'SP500')
+    
 
     return render_template('index.html', chart=chart, form=form, date_options=date_options)
+
+
+@app.route('/portfolio', methods=['GET', 'POST'])
+def portfolio():
+    form = PortfolioUpdateForm()
+
+    # Establish the dropdown menu options
+    asset_choices = [("SP500", "SP500"), ("VIX", "VIX")]
+    quantity_choices = [(str(i), str(i)) for i in range(1, 101)]  # Ensure choices are in a format suitable for the form
+    form.asset_choice.choices, form.quantity.choices = asset_choices, quantity_choices
+
+    if form.validate_on_submit():
+        pass
+    return render_template('portfolio.html', form=form)
+
 
 @app.route('/test', methods=['GET', 'POST'])
 def test():

@@ -40,15 +40,25 @@ def populate_database(ID):
             # Convert date from MM/DD/YYYY to YYYY-MM-DD format
             formatted_date = datetime.strptime(line[0], '%m/%d/%Y').strftime('%Y-%m-%d')
 
-            # Process each line and add it to the database
-            index_data = IndexData(
-                date=formatted_date, 
-                ticker=str(line[1]), 
-                open=float(line[2]), 
-                high=float(line[3]), 
-                low=float(line[4]), 
-                close=float(line[5])
-            )
+            # Process each line and add it to the database as per the ID
+            if ID == 'SP500':
+                index_data = IndexData(
+                    date=formatted_date, 
+                    ticker=str(line[1]), 
+                    open=float(line[2]), 
+                    high=float(line[3]), 
+                    low=float(line[4]), 
+                    close=float(line[5])
+                )
+            elif ID == 'VIX':
+                index_data = VIXData(
+                    date=formatted_date,
+                    open=float(line[2]), 
+                    high=float(line[3]), 
+                    low=float(line[4]), 
+                    close=float(line[5])
+                )
+
             # Add the new IndexData object to the database
             db.session.add(index_data)
         # Commit the changes to the database
@@ -57,11 +67,16 @@ def populate_database(ID):
         file.close()
 
 
-def create_chart(start_date, end_date):
+def create_chart(start_date, end_date, ID):
     # load the stock data for the time period selected by the user
-    df = pd.read_sql(IndexData.query.filter(IndexData.date.between(start_date, end_date)).statement, db.engine,
-        index_col='date'
-    )
+    if ID == 'SP500':
+        df = pd.read_sql(IndexData.query.filter(IndexData.date.between(start_date, end_date)).statement, db.engine,
+            index_col='date'
+        )
+    elif ID == 'VIX':
+        df = pd.read_sql(VIXData.query.filter(VIXData.date.between(start_date, end_date)).statement, db.engine,
+            index_col='date'
+        )
 
     # create a line chart of the stock data
     fig = go.Figure()
@@ -82,7 +97,7 @@ def create_chart(start_date, end_date):
     )
 
     # set figure title
-    fig.update_layout(title='SP500 Index Price Over Time')
+    fig.update_layout(title=f'{ID} Price Over Time')
 
     return fig.to_html(full_html=False)
 

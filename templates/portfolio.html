@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Update your portfolio:</h2>
+<div id="portfolio-update-form">
+    <form action="" method="post" novalidate>
+        {{ form.hidden_tag() }}
+        <div class="form-group">
+            <label for="investment-choice">Select Asset:</label>
+            {{ form.asset_choice(class="form-control") }}
+        </div>
+        <br>
+        <div class="form-group">
+            <label for="quantity">Quantity:</label>
+            {{ form.quantity(class="form-control") }}
+        </div>
+        <br>
+        <div class="form-group">
+            {{ form.submit(class="btn btn-primary") }}
+        </div>
+    </form>
+</div>
+{% endblock %}

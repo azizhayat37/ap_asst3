@@ -6,9 +6,17 @@ class Portfolio(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     asset_id = db.Column(db.Integer, db.ForeignKey('assets.id'))
     quantity = db.Column(db.Integer)
+    price = db.Column(db.Float, nullable=True)
+    '''
+    def set_price(self, asset_id, selected_date):
+        if asset_id == 'SP500':
+            self.price = db.session.query(IndexData).filter(IndexData.date == selected_date).first().close
+        elif asset_id == 'VIX':
+            self.price = db.session.query(VIXData).filter(VIXData.date == selected_date).first().close
 
-    def add_quantity(self, quantity):
+    def add_asset_quantity(self, quantity):
         self.quantity += quantity
+    '''
 
 class Assets(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -20,6 +28,7 @@ class Assets(db.Model):
             self.price = db.relationship('IndexData', backref='sp500', lazy=True)
         elif ticker == 'VIX':
             self.price = db.relationship('VIXData', backref='vix', lazy=True)
+
 
 class IndexData(db.Model):
     id = db.Column(db.Integer, primary_key=True)

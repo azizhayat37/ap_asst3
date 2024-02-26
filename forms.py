@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import SelectField, SubmitField
+from wtforms import SelectField, SubmitField, RadioField
 from wtforms.validators import DataRequired, Email, ValidationError, EqualTo
 
 class ChartDateForm(FlaskForm):
@@ -9,3 +9,8 @@ class ChartDateForm(FlaskForm):
     submit = SubmitField('Submit')
     
 
+class PortfolioUpdateForm(FlaskForm):
+    asset_choice = SelectField('Asset', validators=[DataRequired()])
+    quantity = SelectField('Quantity', validators=[DataRequired()])
+    add_subtract = RadioField('Add/Subtract', validators=[DataRequired()])
+    submit = SubmitField('Submit')

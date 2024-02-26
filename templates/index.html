@@ -1,10 +1,13 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h2>S&P 500 Index Over Time</h2>
-        <div id="chart">
+    <h2>ETF Performance Over Time</h2>
+    <div id="chart">
         {{ chart | safe}}
-        </div>
+    </div>
+    <br>
+    <br>
+    
     <h2>Please select the start & end dates:</h2>
 
     <form action="" method="post" novalidate>
@@ -23,5 +26,6 @@
             {{ form.submit(class="btn btn-primary") }}
         </div>
     </form>
+
 
 {% endblock %}
