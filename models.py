@@ -6,8 +6,11 @@ class Portfolio(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     asset_id = db.Column(db.Integer, db.ForeignKey('assets.id'))
     quantity = db.Column(db.Integer)
-    price = db.Column(db.Float, nullable=True)
+
+    def determine_ticker(self, asset_id):
+        return db.session.query(Assets).filter(Assets.id == asset_id).first().ticker
     '''
+    price = db.Column(db.Float, nullable=True)
     def set_price(self, asset_id, selected_date):
         if asset_id == 'SP500':
             self.price = db.session.query(IndexData).filter(IndexData.date == selected_date).first().close
@@ -21,13 +24,13 @@ class Portfolio(db.Model):
 class Assets(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     ticker = db.Column(db.String(10))
-    price = db.Column(db.Float, nullable=True)
+    full_name = db.Column(db.Integer, nullable=True)
     
-    def determine_histoical_price_data(self, ticker):
+    def determine_full_name(self, ticker):
         if ticker == 'SP500':
-            self.price = db.relationship('IndexData', backref='sp500', lazy=True)
+            self.full_name = 'S&P 500 Index ETF'
         elif ticker == 'VIX':
-            self.price = db.relationship('VIXData', backref='vix', lazy=True)
+            self.full_name = 'Volatility Index ETF'
 
 
 class IndexData(db.Model):
@@ -43,7 +46,7 @@ class IndexData(db.Model):
 class VIXData(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     date = db.Column(db.String(10))
-    ticker = db.Column(db.String(10), default='VIX')
+    ticker = db.Column(db.String(10))
     open = db.Column(db.Float)
     high = db.Column(db.Float)
     low = db.Column(db.Float)

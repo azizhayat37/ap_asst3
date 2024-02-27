@@ -19,16 +19,32 @@ def check_databases_exist():
             print(f"Error in check_databases_exist()... {ID} DATABASE AFFECTED")
             print(e)
 
+    # check that the Assets & Portfolio databases are populated, otherwise create it
+    if Assets.query.first() is None:
+        for ID in databases.keys():
+            asset = Assets(ticker=ID)
+            asset.determine_full_name(ID)
+            db.session.add(asset)
+        db.session.commit()
+
+    if Portfolio.query.first() is None:
+        for asset in Assets.query.all():
+            holding = Portfolio(asset_id=asset.id, quantity=0)
+            holding.determine_ticker(asset.id)
+            db.session.add(holding)
+        db.session.commit()
+
 
 def populate_database(ID):
-    # the source of the data:
+    # the source of the data in /data is Kaggle and CBOE, respectively:
     # SP500: https://www.kaggle.com/datasets/rupindersinghrana/us-stock-price-index-over-17912015
     # VIX: https://www.cboe.com/tradable_products/vix/vix_historical_data/
 
+    # designate the file to be read
     if ID == 'SP500':
         file_name = 'data/SP_PRICE_INDEX_US.csv'
     elif ID == 'VIX':
-        file_name = 'data/VIX_DATA.csv'
+        file_name = 'data/VIX_History.csv'
 
     with open(file_name, 'r') as file:
         # Read the contents of the file
@@ -44,7 +60,7 @@ def populate_database(ID):
             if ID == 'SP500':
                 index_data = IndexData(
                     date=formatted_date, 
-                    ticker=str(line[1]), 
+                    ticker='SP500', 
                     open=float(line[2]), 
                     high=float(line[3]), 
                     low=float(line[4]), 
@@ -53,10 +69,11 @@ def populate_database(ID):
             elif ID == 'VIX':
                 index_data = VIXData(
                     date=formatted_date,
-                    open=float(line[2]), 
-                    high=float(line[3]), 
-                    low=float(line[4]), 
-                    close=float(line[5])
+                    ticker='VIX',
+                    open=float(line[1]), 
+                    high=float(line[2]), 
+                    low=float(line[3]), 
+                    close=float(line[4])
                 )
 
             # Add the new IndexData object to the database
@@ -96,9 +113,29 @@ def create_chart(start_date, end_date, ID):
         height=600   # Set the height
     )
 
+    chart_title = Assets.query.filter_by(ticker=ID).first().full_name
     # set figure title
-    fig.update_layout(title=f'{ID} Price Over Time')
+    fig.update_layout(title=str(chart_title) + ' Price Chart')
 
     return fig.to_html(full_html=False)
+
+def update_portfolio(asset_choice, quantity):
+    # check if the asset is already in the portfolio, if not, add it and amend quantity
+    asset_possibilities = ['SP500', 'VIX']
+    asset_object = Assets.query.filter_by(ticker=asset_choice).first()
+
+    if asset_object:
+        # Extract the id (or another relevant field) from the Assets object
+        asset_id = asset_object.id
+    
+    # if the asset isn't in the portfolio, create it, otherwise just update portfolio holdings
+    if asset_choice in asset_possibilities:
+        asset = Portfolio.query.filter_by(asset_id=asset_id).first()
+        if asset is None:
+            asset = Portfolio(asset_id=asset_id, quantity=quantity)
+            db.session.add(asset)
+        else:
+            asset.quantity = quantity
+        db.session.commit()
 
 

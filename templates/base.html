@@ -22,13 +22,14 @@ body,h1,h2,h3,h4,h5,h6,.w3-wide {font-family: "Montserrat", sans-serif;}
     <h3 class="w3-wide"><b>Abdulaziz Hayat - Advanced Programming: Assessment 3</b></h3>
   </div>
   <div class="w3-padding-64 w3-large w3-text-grey" style="font-weight:bold">
-    <a href="{{ url_for('index') }}" class="w3-bar-item w3-button">ETF Market</a>
     <a href="{{ url_for('portfolio') }}"  class="w3-bar-item w3-button">Portfolio</a>
+    <a href="{{ url_for('index') }}" class="w3-bar-item w3-button">S&P500 Index</a>
+    <a href="{{ url_for('volatility') }}" class="w3-bar-item w3-button">Volatility Index</a>
 </nav>
 
 <!-- Top menu on small screens -->
 <header class="w3-bar w3-top w3-hide-large w3-black w3-xlarge">
-  <div class="w3-bar-item w3-padding-24 w3-wide">LOGO</div>
+  <div class="w3-bar-item w3-padding-24 w3-wide"></div>
   <a href="javascript:void(0)" class="w3-bar-item w3-button w3-padding-24 w3-right" onclick="w3_open()"><i class="fa fa-bars"></i></a>
 </header>
 
@@ -36,6 +37,7 @@ body,h1,h2,h3,h4,h5,h6,.w3-wide {font-family: "Montserrat", sans-serif;}
 <div class="w3-overlay w3-hide-large" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
 
 <!-- !PAGE CONTENT! -->
+
 {% block content %}
 
 {% endblock %}

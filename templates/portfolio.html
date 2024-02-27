@@ -1,7 +1,61 @@
 {% extends "base.html" %}
 
 {% block content %}
+<style>
+    .portfolio-table-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+    }
+    .portfolio-table {
+        width: 60%; /* Adjust width as needed */
+        margin-top: 20px;
+        background-color: #2a2a2a; /* Dark theme background */
+        color: white; /* Text color */
+        border-collapse: collapse;
+    }
+    .portfolio-table th, .portfolio-table td {
+        padding: 10px;
+        border: 1px solid #444444; /* Slightly lighter than the background for visibility */
+        text-align: center;
+    }
+    .portfolio-table th {
+        background-color: #333333; /* Header background */
+    }
+    .portfolio-table tbody tr:hover {
+        background-color: #3d3d3d; /* Hover effect */
+    }
+</style>
+
+<br><br><br>
 <h2>Update your portfolio:</h2>
+<br>
+<div class="portfolio-table-container">
+    <table class="portfolio-table">
+        <thead>
+            <tr>
+                <th>ETF</th>
+                <th>Inventory</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for holding in portfolio %}
+                <tr>
+                    <td>{{holding.ticker}}</td>
+                    <td>{{holding.quantity}}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<br>
+<br>
+<div id="portfolio-update-form">
+    <!-- Form content remains the same -->
+</div>
+
+
 <div id="portfolio-update-form">
     <form action="" method="post" novalidate>
         {{ form.hidden_tag() }}
