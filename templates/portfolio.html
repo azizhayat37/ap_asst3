@@ -28,7 +28,7 @@
     }
 </style>
 
-<br><br><br>
+
 <h2>Update your portfolio:</h2>
 <br>
 <div class="portfolio-table-container">
@@ -40,21 +40,17 @@
             </tr>
         </thead>
         <tbody>
-            {% for holding in portfolio %}
+            {% for asset, holding in portfolio %}
                 <tr>
                     <td>{{holding.ticker}}</td>
-                    <td>{{holding.quantity}}</td>
+                    <td>{{asset.quantity}}</td>
                 </tr>
             {% endfor %}
         </tbody>
     </table>
 </div>
-<br>
-<br>
-<div id="portfolio-update-form">
-    <!-- Form content remains the same -->
-</div>
 
+<br><br><br>
 
 <div id="portfolio-update-form">
     <form action="" method="post" novalidate>

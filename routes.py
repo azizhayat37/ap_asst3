@@ -67,7 +67,7 @@ def portfolio():
     form.asset_choice.choices, form.quantity.choices = asset_choices, quantity_choices
 
     # query user portfolio
-    portfolio = Assets.query.join(Portfolio).filter(Portfolio.asset_id == Assets.id).all()
+    portfolio = db.session.query(Portfolio, Assets).join(Assets, Portfolio.asset_id == Assets.id).all()
 
     # update the user's portfolio once the form is submitted
     if form.validate_on_submit():
@@ -75,6 +75,7 @@ def portfolio():
             asset_choice=form.asset_choice.data, 
             quantity=int(form.quantity.data)
         )
+    
     return render_template('portfolio.html', form=form, portfolio=portfolio)
 
 
