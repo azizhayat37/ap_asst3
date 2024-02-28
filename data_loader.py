@@ -146,7 +146,7 @@ def generate_investment_data(ticker, start_date, end_date):
     etf_name = Assets.query.filter_by(ticker=ticker).first().full_name
     asset_id = Assets.query.filter_by(ticker=ticker).first().id
     position = Portfolio.query.filter_by(asset_id=asset_id).first().quantity
-    entry_price = IndexData.query.filter_by(date=start_date).first().open
+    entry_price = IndexData.query.filter_by(date=start_date).first().close
     exit_price = IndexData.query.filter_by(date=end_date).first().close
     profit_loss = round((exit_price * position) - (entry_price * position), 2)
 

@@ -5,31 +5,41 @@ from forms import ChartDataForm, PortfolioUpdateForm
 from models import IndexData, VIXData, Assets, Portfolio
 from datetime import datetime
 from sqlalchemy import extract
+from sqlalchemy import func
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
     form = ChartDataForm()
 
-    #create the database if it doesn't exist
-    check_databases_exist()
+    # database check
+    try:
+        check_databases_exist()
+    except Exception as e:
+        print(f"Error in check_databases_exist()... {e}")
     
     # default starting and ending dates - show the entire time span
     start_date = datetime(2001, 1, 3)
     end_date = datetime(2013, 4, 8)
 
     # dates in the dropdown menus come from the database, 1st of month only
-    date_options = IndexData.query.with_entities(IndexData.date).filter(extract('day', IndexData.date) == 1).all() # get the first of every month
+    date_options = IndexData.query.with_entities(IndexData.date).all()
     date_options = [(date.date, date.date) for date in date_options]  # adjust date format to get rid of parentheses
     form.start_date.choices, form.end_date.choices = date_options, date_options
 
-    etf_name, position, entry_price, exit_price, profit_loss = generate_investment_data('VIX', start_date.strftime('%Y-%m-%d'), end_date.strftime('%Y-%m-%d'))
+    etf_name, position, entry_price, exit_price, profit_loss = generate_investment_data('SP500', start_date.strftime('%Y-%m-%d'), end_date.strftime('%Y-%m-%d'))
 
     # upon submitting the form, get the user's selected dates
     if form.validate_on_submit():
         # create the data that will populare the boxes beneath the chart
-        start_date = form.start_date.data
-        end_date = form.end_date.data
-        etf_name, position, entry_price, exit_price, profit_loss = generate_investment_data('VIX', start_date, end_date)
+        start_date = datetime.strptime(form.start_date.data, '%Y-%m-%d').date()
+        end_date = datetime.strptime(form.end_date.data, '%Y-%m-%d').date()
+        if start_date < end_date:
+            #flash('Start date must be before end date!')
+            redirect(url_for('index'))
+        else:
+            start_date = datetime(2001, 1, 3).date()
+            end_date = datetime(2013, 4, 8).date()
+            etf_name, position, entry_price, exit_price, profit_loss = generate_investment_data('SP500', start_date, end_date)
     
     # create the chart that renders as soon as you hit the page
     chart = create_chart(start_date, end_date, 'SP500')
@@ -41,13 +51,19 @@ def index():
 @app.route('/volatility', methods=['GET', 'POST'])
 def volatility():
     form = ChartDataForm()
+    
+    # database check
+    try:
+        check_databases_exist()
+    except Exception as e:
+        print(f"Error in check_databases_exist()... {e}")
 
     # default starting and ending dates - show the entire time span
     start_date = datetime(2001, 1, 3)
     end_date = datetime(2013, 4, 8)
 
     # dates in the dropdown menus come from the database, 1st of month only
-    date_options = VIXData.query.with_entities(VIXData.date).filter(extract('day', VIXData.date) == 1).all() # get the first of every month
+    date_options = VIXData.query.with_entities(VIXData.date).all()
     date_options = [(date.date, date.date) for date in date_options]  # adjust date format to get rid of parentheses
     form.start_date.choices, form.end_date.choices = date_options, date_options
 
@@ -55,14 +71,21 @@ def volatility():
 
     # upon submitting the form, get the user's selected dates
     if form.validate_on_submit():
-        start_date = form.start_date.data
-        end_date = form.end_date.data
-        etf_name, position, entry_price, exit_price, profit_loss = generate_investment_data('VIX', start_date, end_date)
+        # create the data that will populare the boxes beneath the chart
+        start_date = datetime.strptime(form.start_date.data, '%Y-%m-%d').date()
+        end_date = datetime.strptime(form.end_date.data, '%Y-%m-%d').date()
+        if start_date < end_date:
+            #flash('Start date must be before end date!')
+            redirect(url_for('index'))
+        else:
+            start_date = datetime(2001, 1, 3).date()
+            end_date = datetime(2013, 4, 8).date()
+            etf_name, position, entry_price, exit_price, profit_loss = generate_investment_data('VIX', start_date, end_date)
     
     # create the chart that renders as soon as you hit the page
     chart = create_chart(start_date, end_date, 'VIX')
-    
-    return render_template('index.html', form=form, chart=chart, date_options=date_options, etf_name=etf_name, position=position, 
+
+    return render_template('index.html', chart=chart, form=form, date_options=date_options, etf_name=etf_name, position=position, 
                            entry_price=entry_price, exit_price=exit_price, profit_loss=profit_loss)
 
 
@@ -88,6 +111,7 @@ def portfolio():
     return render_template('portfolio.html', form=form, portfolio=portfolio)
 
 
+'''
 @app.route('/test', methods=['GET', 'POST'])
 def test():
     try:
@@ -101,3 +125,4 @@ def test():
     except Exception as e:
         print(e)
     return 'Now testing the data loader...'
+'''
