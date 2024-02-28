@@ -24,19 +24,19 @@
 
     <div class="box-container">
         <div class="box">
-            <h3>ETF: {{etf_name}}</h3>
+            <h3>Asset: {{etf_name}}</h3>
         </div>
         <div class="box">
-            <h3>You Position: {{position}}</h3>
+            <h3>Your Position: {{position}} shares</h3>
         </div>
         <div class="box">
-            <h3>Entry Price: ${{entry_price}}</h3>
+            <h3>Entry Price: ${{entry_price | format_currency}}</h3>
         </div>
         <div class="box">
-            <h3>Exit Price: ${{exit_price}}</h3>
+            <h3>Exit Price: ${{exit_price | format_currency}}</h3>
         </div>
         <div class="box">
-            <h3>Profit: ${{profit_loss}}</h3>
+            <h3>Gross Profit: ${{profit_loss | format_currency }}</h3>
         </div>
     </div>
 

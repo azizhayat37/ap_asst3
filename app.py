@@ -4,6 +4,16 @@ from flask_sqlalchemy import SQLAlchemy
 # create a Flask app
 app = Flask(__name__)
 
+#Filters for Jinja2 template engine
+def format_currency(value):
+    try:
+        return "{:,.2f}".format(float(value))
+    except ValueError:
+        return value
+    
+# Register the function as a filter for Jinja2
+app.jinja_env.filters['format_currency'] = format_currency
+
 # configure the database URI
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////Users/azizhayat/Documents/AP_ASST3/instance/my_database.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False #to supress warning

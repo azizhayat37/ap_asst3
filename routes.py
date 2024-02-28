@@ -1,6 +1,6 @@
 from app import app, db
 from flask import request, render_template, flash, redirect, url_for
-from data_loader import populate_database, create_chart, check_databases_exist, update_portfolio
+from data_loader import create_chart, check_databases_exist, update_portfolio
 from forms import ChartDataForm, PortfolioUpdateForm
 from models import IndexData, VIXData, Assets, Portfolio
 from datetime import datetime
@@ -23,10 +23,11 @@ def index():
     form.start_date.choices, form.end_date.choices = date_options, date_options
 
     etf_name = Assets.query.filter_by(ticker='SP500').first().full_name
-    position = Portfolio.query.filter_by(asset_id=1).first().quantity
+    asset_id = Assets.query.filter_by(ticker='SP500').first().id
+    position = Portfolio.query.filter_by(asset_id=asset_id).first().quantity
     entry_price = IndexData.query.filter_by(date=start_date.strftime('%Y-%m-%d')).first().open
     exit_price = IndexData.query.filter_by(date=end_date.strftime('%Y-%m-%d')).first().close
-    profit_loss = (exit_price - entry_price) * position
+    profit_loss = round((exit_price * position) - (entry_price * position), 2)
 
     # upon submitting the form, get the user's selected dates
     if form.validate_on_submit():
@@ -35,6 +36,7 @@ def index():
         end_date = form.end_date.data
         entry_price = IndexData.query.filter_by(date=start_date).first().open
         exit_price = IndexData.query.filter_by(date=start_date).first().close
+        profit_loss = round((exit_price * position) - (entry_price * position), 2)
     
     # create the chart that renders as soon as you hit the page
     chart = create_chart(start_date, end_date, 'SP500')

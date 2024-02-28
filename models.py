@@ -9,6 +9,7 @@ class Portfolio(db.Model):
 
     def determine_ticker(self, asset_id):
         return db.session.query(Assets).filter(Assets.id == asset_id).first().ticker
+    
 
 class Assets(db.Model):
     id = db.Column(db.Integer, primary_key=True)

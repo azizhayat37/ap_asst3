@@ -135,6 +135,7 @@ def update_portfolio(asset_choice, quantity):
             asset = Portfolio(asset_id=asset_id, quantity=quantity)
             db.session.add(asset)
         else:
+            #this cannot go negative as selection is limited in the dropdown list
             asset.quantity = quantity
         db.session.commit()
 
