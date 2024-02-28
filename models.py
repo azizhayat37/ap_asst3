@@ -9,17 +9,6 @@ class Portfolio(db.Model):
 
     def determine_ticker(self, asset_id):
         return db.session.query(Assets).filter(Assets.id == asset_id).first().ticker
-    '''
-    price = db.Column(db.Float, nullable=True)
-    def set_price(self, asset_id, selected_date):
-        if asset_id == 'SP500':
-            self.price = db.session.query(IndexData).filter(IndexData.date == selected_date).first().close
-        elif asset_id == 'VIX':
-            self.price = db.session.query(VIXData).filter(VIXData.date == selected_date).first().close
-
-    def add_asset_quantity(self, quantity):
-        self.quantity += quantity
-    '''
 
 class Assets(db.Model):
     id = db.Column(db.Integer, primary_key=True)

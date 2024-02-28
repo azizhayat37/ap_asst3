@@ -12,25 +12,35 @@ def index():
 
     #create the database if it doesn't exist
     check_databases_exist()
+    
+    # default starting and ending dates - show the entire time span
+    start_date = datetime(2001, 1, 3)
+    end_date = datetime(2013, 4, 8)
 
     # dates in the dropdown menus come from the database, 1st of month only
     date_options = IndexData.query.with_entities(IndexData.date).filter(extract('day', IndexData.date) == 1).all() # get the first of every month
     date_options = [(date.date, date.date) for date in date_options]  # adjust date format to get rid of parentheses
     form.start_date.choices, form.end_date.choices = date_options, date_options
 
-    # default starting and ending dates - show the entire time span
-    start_date = datetime(2001, 1, 3)
-    end_date = datetime(2013, 4, 8)
+    etf_name = Assets.query.filter_by(ticker='SP500').first().full_name
+    position = Portfolio.query.filter_by(asset_id=1).first().quantity
+    entry_price = IndexData.query.filter_by(date=start_date.strftime('%Y-%m-%d')).first().open
+    exit_price = IndexData.query.filter_by(date=end_date.strftime('%Y-%m-%d')).first().close
+    profit_loss = (exit_price - entry_price) * position
 
     # upon submitting the form, get the user's selected dates
     if form.validate_on_submit():
+        # create the data that will populare the boxes beneath the chart
         start_date = form.start_date.data
         end_date = form.end_date.data
+        entry_price = IndexData.query.filter_by(date=start_date).first().open
+        exit_price = IndexData.query.filter_by(date=start_date).first().close
     
     # create the chart that renders as soon as you hit the page
     chart = create_chart(start_date, end_date, 'SP500')
-    
-    return render_template('index.html', chart=chart, form=form, date_options=date_options)
+
+    return render_template('index.html', chart=chart, form=form, date_options=date_options, etf_name=etf_name, position=position, 
+                           entry_price=entry_price, exit_price=exit_price, profit_loss=profit_loss)
 
 
 @app.route('/volatility', methods=['GET', 'POST'])

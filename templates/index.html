@@ -7,7 +7,39 @@
     </div>
     <br>
     <br>
-    
+
+    <style>
+        .box-container {
+            display: flex;
+        }
+
+        .box {
+            flex: 1;
+            margin: 10px;
+            padding: 20px;
+            border: 1px solid black;
+            word-wrap: break-word;
+        }
+    </style>
+
+    <div class="box-container">
+        <div class="box">
+            <h3>ETF: {{etf_name}}</h3>
+        </div>
+        <div class="box">
+            <h3>You Position: {{position}}</h3>
+        </div>
+        <div class="box">
+            <h3>Entry Price: ${{entry_price}}</h3>
+        </div>
+        <div class="box">
+            <h3>Exit Price: ${{exit_price}}</h3>
+        </div>
+        <div class="box">
+            <h3>Profit: ${{profit_loss}}</h3>
+        </div>
+    </div>
+
     <h2>Please select the start & end dates:</h2>
 
     <form action="" method="post" novalidate>
