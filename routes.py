@@ -77,7 +77,7 @@ def volatility():
         end_date = datetime.strptime(form.end_date.data, '%Y-%m-%d').date()
         if start_date < end_date:
             redirect(url_for('index'))
-            etf_name, position, entry_price, exit_price, profit_loss = generate_investment_data('SP500', start_date, end_date)
+            etf_name, position, entry_price, exit_price, profit_loss = generate_investment_data('VIX', start_date, end_date)
         else:
             # if the start date is after the end date, stick to defaults
             start_date = datetime(2001, 1, 3).date()
