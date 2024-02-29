@@ -93,8 +93,8 @@ def volatility():
                            entry_price=entry_price, exit_price=exit_price, profit_loss=profit_loss)
 
 
-@app.route('/double_chart', methods=['GET', 'POST'])
-def double_chart():
+@app.route('/double', methods=['GET', 'POST'])
+def double():
     form = ChartDataForm()
     
     # database check
@@ -112,7 +112,8 @@ def double_chart():
     date_options = [(date.date, date.date) for date in date_options]  # adjust date format to get rid of parentheses
     form.start_date.choices, form.end_date.choices = date_options, date_options
 
-    etf_name, position, entry_price, exit_price, profit_loss = generate_investment_data('VIX', start_date.strftime('%Y-%m-%d'), end_date.strftime('%Y-%m-%d'))
+    etf_name1, position1, entry_price1, exit_price1, profit_loss1 = generate_investment_data('VIX', start_date.strftime('%Y-%m-%d'), end_date.strftime('%Y-%m-%d'))
+    etf_name2, position2, entry_price2, exit_price2, profit_loss2 = generate_investment_data('SP500', start_date.strftime('%Y-%m-%d'), end_date.strftime('%Y-%m-%d'))
 
     # upon submitting the form, get the user's selected dates
     if form.validate_on_submit():
@@ -122,18 +123,21 @@ def double_chart():
         if start_date < end_date:
             #flash('Start date must be before end date!')
             redirect(url_for('index'))
-            etf_name, position, entry_price, exit_price, profit_loss = generate_investment_data('SP500', start_date, end_date)
+            etf_name1, position1, entry_price1, exit_price1, profit_loss1 = generate_investment_data('VIX', start_date.strftime('%Y-%m-%d'), end_date.strftime('%Y-%m-%d'))
+            etf_name2, position2, entry_price2, exit_price2, profit_loss2 = generate_investment_data('SP500', start_date.strftime('%Y-%m-%d'), end_date.strftime('%Y-%m-%d'))
         else:
             # if the start date is after the end date, stick to defaults
             start_date = datetime(2001, 1, 3).date()
             end_date = datetime(2013, 4, 8).date()
-            etf_name, position, entry_price, exit_price, profit_loss = generate_investment_data('VIX', start_date, end_date)
+            etf_name1, position1, entry_price1, exit_price1, profit_loss1 = generate_investment_data('VIX', start_date.strftime('%Y-%m-%d'), end_date.strftime('%Y-%m-%d'))
+            etf_name2, position2, entry_price2, exit_price2, profit_loss2 = generate_investment_data('SP500', start_date.strftime('%Y-%m-%d'), end_date.strftime('%Y-%m-%d'))
     
     # create the chart that renders as soon as you hit the page
     chart = create_double_chart(start_date, end_date)
 
-    return render_template('double.html', chart=chart, form=form, date_options=date_options, etf_name=etf_name, position=position, 
-                           entry_price=entry_price, exit_price=exit_price, profit_loss=profit_loss)
+    return render_template('double.html', chart=chart, form=form, date_options=date_options, etf_name1=etf_name1, position1=position1, entry_price1=entry_price1,
+                            exit_price1=exit_price1, profit_loss1=profit_loss1, etf_name2=etf_name2, position2=position2, entry_price2=entry_price2, exit_price2=exit_price2, 
+                            profit_loss2=profit_loss2)
 
 @app.route('/portfolio', methods=['GET', 'POST'])
 def portfolio():
