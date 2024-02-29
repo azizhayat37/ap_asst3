@@ -37,6 +37,7 @@ def index():
             #flash('Start date must be before end date!')
             redirect(url_for('index'))
         else:
+            # if the start date is after the end date, stick to defaults
             start_date = datetime(2001, 1, 3).date()
             end_date = datetime(2013, 4, 8).date()
             etf_name, position, entry_price, exit_price, profit_loss = generate_investment_data('SP500', start_date, end_date)
@@ -78,6 +79,7 @@ def volatility():
             #flash('Start date must be before end date!')
             redirect(url_for('index'))
         else:
+            # if the start date is after the end date, stick to defaults
             start_date = datetime(2001, 1, 3).date()
             end_date = datetime(2013, 4, 8).date()
             etf_name, position, entry_price, exit_price, profit_loss = generate_investment_data('VIX', start_date, end_date)
