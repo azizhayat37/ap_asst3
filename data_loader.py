@@ -200,12 +200,18 @@ def update_portfolio(asset_choice, quantity):
 #DATES MUST BE IN THIS FORMAT --> end_date.strftime('%Y-%m-%d')
 def generate_investment_data(ticker, start_date, end_date):
 
-    # get the user's selected ticker
+    # determine the database beed to be queried
+    if ticker == 'SP500':
+        target_db = IndexData
+    elif ticker == 'VIX':
+        target_db = VIXData
+
+    # get/calculate data need for the boxes below the rendered chart
     etf_name = Assets.query.filter_by(ticker=ticker).first().full_name
     asset_id = Assets.query.filter_by(ticker=ticker).first().id
     position = Portfolio.query.filter_by(asset_id=asset_id).first().quantity
-    entry_price = IndexData.query.filter_by(date=start_date).first().close
-    exit_price = IndexData.query.filter_by(date=end_date).first().close
+    entry_price = target_db.query.filter_by(date=start_date).first().close
+    exit_price = target_db.query.filter_by(date=end_date).first().close
     profit_loss = round((exit_price * position) - (entry_price * position), 2)
 
     return etf_name, position, entry_price, exit_price, profit_loss
