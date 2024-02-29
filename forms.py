@@ -2,6 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms import SelectField, SubmitField, RadioField
 from wtforms.validators import DataRequired, Email, ValidationError, EqualTo
 
+
 class ChartDataForm(FlaskForm):
     # accept user input to amend the start and end dates of the stock chart being rendered by plotly
     start_date = SelectField('Start Date', validators=[DataRequired()])

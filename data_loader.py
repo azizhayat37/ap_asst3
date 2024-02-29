@@ -163,7 +163,7 @@ def create_double_chart(start_date, end_date):
     )
 
     # set figure title
-    fig.update_layout(title='SP500 and VIX Price Chart')
+    fig.update_layout(title='SP500 & VIX Price Chart')
 
     # Add a right y-axis for VIX
     fig.update_layout(
@@ -172,8 +172,21 @@ def create_double_chart(start_date, end_date):
             overlaying='y',
             side='right',
             tickprefix='$'
+        ),
+        yaxis=dict(
+            title='SP500',
+            tickprefix='$'
         )
     )
+
+    # Set the legend position to top center (otherwise it covers the right-side y-axis ticks)
+    fig.update_layout(legend=dict(
+        orientation="h",
+        yanchor="bottom",
+        y=1.0,
+        xanchor="center",
+        x=0.5
+    ))
 
     return fig.to_html(full_html=False)
 

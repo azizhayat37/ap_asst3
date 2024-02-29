@@ -1,5 +1,5 @@
 from app import app, db
-from flask import request, render_template, flash, redirect, url_for
+from flask import request, render_template, redirect, url_for
 from data_loader import create_chart, check_databases_exist, update_portfolio, generate_investment_data, create_double_chart
 from forms import ChartDataForm, PortfolioUpdateForm
 from models import IndexData, VIXData, Assets, Portfolio
@@ -34,7 +34,6 @@ def index():
         start_date = datetime.strptime(form.start_date.data, '%Y-%m-%d').date()
         end_date = datetime.strptime(form.end_date.data, '%Y-%m-%d').date()
         if start_date < end_date:
-            #flash('Start date must be before end date!')
             redirect(url_for('index'))
             etf_name, position, entry_price, exit_price, profit_loss = generate_investment_data('SP500', start_date, end_date)
         else:
@@ -77,7 +76,6 @@ def volatility():
         start_date = datetime.strptime(form.start_date.data, '%Y-%m-%d').date()
         end_date = datetime.strptime(form.end_date.data, '%Y-%m-%d').date()
         if start_date < end_date:
-            #flash('Start date must be before end date!')
             redirect(url_for('index'))
             etf_name, position, entry_price, exit_price, profit_loss = generate_investment_data('SP500', start_date, end_date)
         else:
@@ -117,11 +115,10 @@ def double():
 
     # upon submitting the form, get the user's selected dates
     if form.validate_on_submit():
-        # create the data that will populare the boxes beneath the chart
+        # create the data that will populate the boxes beneath the chart
         start_date = datetime.strptime(form.start_date.data, '%Y-%m-%d').date()
         end_date = datetime.strptime(form.end_date.data, '%Y-%m-%d').date()
         if start_date < end_date:
-            #flash('Start date must be before end date!')
             redirect(url_for('index'))
             etf_name1, position1, entry_price1, exit_price1, profit_loss1 = generate_investment_data('VIX', start_date.strftime('%Y-%m-%d'), end_date.strftime('%Y-%m-%d'))
             etf_name2, position2, entry_price2, exit_price2, profit_loss2 = generate_investment_data('SP500', start_date.strftime('%Y-%m-%d'), end_date.strftime('%Y-%m-%d'))
@@ -162,6 +159,7 @@ def portfolio():
 
 
 '''
+# This is a way to test various methods via an HTTP request - comment out before going to production
 @app.route('/test', methods=['GET', 'POST'])
 def test():
     try:
