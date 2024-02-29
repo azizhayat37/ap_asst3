@@ -119,6 +119,64 @@ def create_chart(start_date, end_date, ID):
 
     return fig.to_html(full_html=False)
 
+def create_double_chart(start_date, end_date):
+    # load the SP500 data for the time period selected by the user
+    SP500 = pd.read_sql(IndexData.query.filter(IndexData.date.between(start_date, end_date)).statement, db.engine,
+        index_col='date'
+    )
+
+    # load the VIX data for the time period selected by the user
+    VIX = pd.read_sql(VIXData.query.filter(VIXData.date.between(start_date, end_date)).statement, db.engine,
+        index_col='date'
+    )
+
+    # create a line chart for SP500
+    sp500_trace = go.Scatter(
+        x=SP500.index, 
+        y=SP500['close'], 
+        mode='lines',
+        name='SP500'
+    )
+
+    # create a line chart for VIX
+    vix_trace = go.Scatter(
+        x=VIX.index, 
+        y=VIX['close'], 
+        mode='lines',
+        name='VIX',
+        yaxis='y2'  # Assign the trace to the right y-axis
+    )
+
+    # create a figure and add the traces
+    fig = go.Figure()
+    fig.add_trace(sp500_trace)
+    fig.add_trace(vix_trace)
+
+    # prefix y-axis tick labels with dollar sign
+    fig.update_yaxes(tickprefix="$")
+
+    # Set figure title and size
+    fig.update_layout(
+        title='',
+        width=1200,  # Set the width
+        height=600   # Set the height
+    )
+
+    # set figure title
+    fig.update_layout(title='SP500 and VIX Price Chart')
+
+    # Add a right y-axis for VIX
+    fig.update_layout(
+        yaxis2=dict(
+            title='VIX',
+            overlaying='y',
+            side='right',
+            tickprefix='$'
+        )
+    )
+
+    return fig.to_html(full_html=False)
+
 def update_portfolio(asset_choice, quantity):
     # check if the asset is already in the portfolio, if not, add it and amend quantity
     asset_possibilities = ['SP500', 'VIX']

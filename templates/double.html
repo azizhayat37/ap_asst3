@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2>ETF Performance</h2>
+    <div id="chart">
+        {{ chart | safe}}
+    </div>
+    <br>
+    <br>
+
+    <style>
+        .box-container {
+            display: flex;
+        }
+
+        .box {
+            flex: 1;
+            margin: 10px;
+            padding: 20px;
+            border: 1px solid black;
+            word-wrap: break-word;
+        }
+    </style>
+
+    <div class="box-container">
+        <div class="box">
+            <h3>Asset: {{etf_name}}</h3>
+        </div>
+        <div class="box">
+            <h3>Your Position: {{position}} shares</h3>
+        </div>
+        <div class="box">
+            <h3>Entry Price: ${{entry_price | format_currency}}</h3>
+        </div>
+        <div class="box">
+            <h3>Exit Price: ${{exit_price | format_currency}}</h3>
+        </div>
+        <div class="box">
+            <h3>Gross Profit: ${{profit_loss | format_currency }}</h3>
+        </div>
+    </div>
+
+    <div class="box-container">
+        <div class="box">
+            <h3>Asset: {{etf_name}}</h3>
+        </div>
+        <div class="box">
+            <h3>Your Position: {{position}} shares</h3>
+        </div>
+        <div class="box">
+            <h3>Entry Price: ${{entry_price | format_currency}}</h3>
+        </div>
+        <div class="box">
+            <h3>Exit Price: ${{exit_price | format_currency}}</h3>
+        </div>
+        <div class="box">
+            <h3>Gross Profit: ${{profit_loss | format_currency }}</h3>
+        </div>
+    </div>
+
+    <h2>Please select the start & end dates:</h2>
+
+    <form action="" method="post" novalidate>
+        {{ form.hidden_tag() }}
+        <div class="form-group">
+            <label for="start_date">Start Date:</label>
+            {{ form.start_date(class="form-control") }}
+        </div>
+        <br>
+        <div class="form-group">
+            <label for="end_date">End Date:</label>
+            {{ form.end_date(class="form-control") }}
+        </div>
+        <br>
+        <div class="form-group">
+            {{ form.submit(class="btn btn-primary") }}
+        </div>
+    </form>
+
+
+{% endblock %}
