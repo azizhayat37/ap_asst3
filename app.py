@@ -16,7 +16,8 @@ app.jinja_env.filters['format_currency'] = format_currency
 
 # configure the database URI
 #app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////Users/azizhayat/Documents/AP_ASST3/instance/my_database.db'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///instance/my_database.db'
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///instance/my_database.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////home/codio/workspace/ap_asst3/instance/my_database.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False #to supress warning
 app.config['WTF_CSRF_ENABLED'] = False
 app.config['SECRET_KEY'] = 'secret_key'  # change later when necessary
@@ -25,9 +26,13 @@ app.config['SECRET_KEY'] = 'secret_key'  # change later when necessary
 db = SQLAlchemy(app)
 
 # create all the models in the database
-with app.app_context():
-    from models import IndexData
-    db.create_all()
-
+try:
+    with app.app_context():
+        from models import IndexData
+        db.create_all()
+except Exception as e:
+    print(f"Error initializing database: {e}")
+    print("Database URI:", app.config['SQLALCHEMY_DATABASE_URI'])
+    
 # import all routes (keeping it off of app.py)
 from routes import *
