@@ -15,7 +15,8 @@ def format_currency(value):
 app.jinja_env.filters['format_currency'] = format_currency
 
 # configure the database URI
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////Users/azizhayat/Documents/AP_ASST3/instance/my_database.db'
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////Users/azizhayat/Documents/AP_ASST3/instance/my_database.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///instance/my_database.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False #to supress warning
 app.config['WTF_CSRF_ENABLED'] = False
 app.config['SECRET_KEY'] = 'secret_key'  # change later when necessary
