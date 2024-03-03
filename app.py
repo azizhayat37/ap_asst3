@@ -1,5 +1,6 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+import os
 
 # create a Flask app
 app = Flask(__name__)
@@ -17,7 +18,13 @@ app.jinja_env.filters['format_currency'] = format_currency
 # configure the database URI
 #app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////Users/azizhayat/Documents/AP_ASST3/instance/my_database.db'
 #app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///instance/my_database.db'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////home/codio/workspace/ap_asst3/instance/my_database.db'
+
+#below works on codio
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////home/codio/workspace/ap_asst3/instance/my_database.db'
+
+#below works on render deployment (supposedly)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(os.path.abspath(os.path.dirname(__file__)), 'instance', 'my_database.db')
+
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False #to supress warning
 app.config['WTF_CSRF_ENABLED'] = False
 app.config['SECRET_KEY'] = 'secret_key'  # change later when necessary
