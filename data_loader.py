@@ -7,6 +7,7 @@ import pandas as pd
 from datetime import datetime
 #TEST
 from sqlalchemy import create_engine
+#TEST
 
 def check_databases_exist():
     #check that the databases to be populated from CSV exist, otherwise create them
@@ -88,11 +89,13 @@ def populate_database(ID):
 
 def create_chart(start_date, end_date, ID):
     ####TEST
+    '''
     # Assuming `IndexData` is your model
     engine = create_engine('sqlite:////home/codio/workspace/ap_asst3/instance/my_database.db')
 
     df = pd.read_sql("SELECT * FROM index_data LIMIT 10", engine)
     print(df)
+    '''
     ####TEST
     # load the stock data for the time period selected by the user
     if ID == 'SP500':
