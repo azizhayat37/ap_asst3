@@ -1,0 +1,32 @@
+* e1d941e9 : fixed issued with old navbar from w3schools html templates obscuring new content
+* ff4d0474 : changed path of sqlalchemy_database_uri config in app.py to work in render
+* b8fb53c6 : changed numpy version to comply with render
+* eb658b63 : added gunicorn to venv and froze requirements
+* 73817fd6 : STABLE CODIO VERSION
+* 5c151345 : database connection issue fixed with config - now having issue reading from it in app
+* 11400633 : codio version - database connection issues
+* e253145f : db
+* fe286b4c : req
+* 706575eb : STABLE updated requirements.txt
+* 2326105f : STABLE - fixed bugs
+* 0fbc456a : added readme and made minor edits
+* 6226d0e6 : fixed querying problem in generate_investment_data()
+* b04bf551 : stable but need to fix entry/exit price fetch from DB
+* 44d18789 : adding double comparison page
+* e77ac76b : fixed the issue with the chart rendering and investment math not updating
+* 6806eb05 : added some testing and amended routes.py
+* 48914010 : added some error handling with function calls
+* 08001dce : 28 FEB 2024 -- STABLE v2
+* dcc52fb6 : 28 FEB 2024 -- STABLE
+* 114c5b8a : returns math working
+* cc7b2465 : fixed portfolio page rendering issues
+* bed0a6da : added a lot more to the html templates, amended models, added new functions to data_loader.py
+* 834fe852 : added portfolio page, amended logic for chart generation
+* 897e5f29 : added more models for assets adn portfolio
+* ded5925f : added vix data in csv format
+* 4277771b : enhanced the html templates, improved chart render to html, fixed issue with dates, created form objects for start/end date selection
+* 0c2af929 : adding chart making logic and html templates... need to change date format
+* 5f2090a4 : minor edits to populate_database()
+* 6fac4759 : need to debug the populate_database function -- fix string read error
+* a799db04 : basic layout for a flask app
+* 2acf0d04 : Initial commit
